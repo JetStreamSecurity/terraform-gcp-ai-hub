@@ -70,9 +70,10 @@ resource "google_compute_instance" "instance" {
     enable-oslogin = var.enable_os_login
     ssh-keys       = "${var.ssh_user}:${var.ssh_public_key}"
     user-data = templatefile("${path.module}/cloud-init.yaml", {
-      gateway_key  = var.jetstream_gateway_key
-      cert_public  = var.cert_public
-      cert_private = var.cert_private
+      gateway_key      = var.jetstream_gateway_key
+      gateway_endpoint = var.gateway_endpoint
+      cert_public      = var.cert_public
+      cert_private     = var.cert_private
     })
   }
 

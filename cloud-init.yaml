@@ -38,6 +38,7 @@ write_files:
 
 runcmd:
   - sed -i "s/customer-gateway-key-here/${gateway_key}/" /opt/app/.env
+  - sed -i "s/gateway.jetstream.security/${gateway_endpoint}/" /opt/app/.env
   - sed -i 's/\\n/\n/g' /opt/app/ai-hub.crt
   - sed -i 's/\\n/\n/g' /opt/app/ai-hub.key
   - systemctl enable docker-app.service

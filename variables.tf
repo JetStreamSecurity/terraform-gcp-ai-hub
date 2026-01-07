@@ -134,6 +134,12 @@ variable "ingress_ports" {
   default     = ["4000", "443"]
 }
 
+variable "gateway_endpoint" {
+  description = "JetStream Gateway Endpoint"
+  type        = string
+  default     = "gateway.jetstream.security"
+}
+
 # Tags
 variable "tags" {
   description = "Map of tags to assign to all resources"
