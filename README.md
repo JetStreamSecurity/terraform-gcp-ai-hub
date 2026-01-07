@@ -133,6 +133,7 @@ module "jetstream_ai_hub" {
 | jetstream_gateway_key | JetStream Gateway key for AI-Hub configuration | `string` | n/a | yes |
 | ssh_public_key | SSH public key for instance access | `string` | n/a | yes |
 | ingress_cidrs | List of CIDR blocks allowed to access the instance | `list(string)` | n/a | yes |
+| gateway_endpoint | JetStream Gateway service endpoint | `string` | `gateway.jetstream.security` | no |
 | image_project_id | GCP Project ID where the custom image is located | `string` | `"js-engineering-480823"` | no |
 | ssh_user | SSH username for the key | `string` | `"ubuntu"` | no |
 | gcp_region | GCP region for the instance | `string` | `"us-central1"` | no |
