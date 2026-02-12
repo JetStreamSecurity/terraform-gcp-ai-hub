@@ -4,42 +4,23 @@ package_update: true
 package_upgrade: true
 
 write_files:
-  - path: /etc/systemd/system/docker-app.service
-    content: |
-      [Unit]
-      Description=Docker Compose Application
-      Requires=docker.service
-      After=docker.service
-
-      [Service]
-      Type=oneshot
-      RemainAfterExit=yes
-      WorkingDirectory=/opt/app
-      ExecStart=/usr/bin/docker compose up -d
-      ExecStop=/usr/bin/docker compose down
-      TimeoutStartSec=0
-
-      [Install]
-      WantedBy=multi-user.target
-    owner: root:root
-    permissions: '0644'
-
-  - path: /opt/app/ai-hub.crt
+  - path: /opt/app/docker/ai-hub.crt
     owner: ubuntu:ubuntu
     permissions: '0644'
-    encoding: gz+b64
+    encoding: b64
     content: ${cert_public}
 
-  - path: /opt/app/ai-hub.key
+  - path: /opt/app/docker/ai-hub.key
     owner: ubuntu:ubuntu
     permissions: '0600'
-    encoding: gz+b64
+    encoding: b64
     content: ${cert_private}
 
 runcmd:
-  - sed -i "s/customer-gateway-key-here/${gateway_key}/" /opt/app/.env
-  - sed -i "s/gateway.jetstream.security/${gateway_endpoint}/" /opt/app/.env
-  - sed -i 's/\\n/\n/g' /opt/app/ai-hub.crt
-  - sed -i 's/\\n/\n/g' /opt/app/ai-hub.key
-  - systemctl enable docker-app.service
-  - cd /opt/app && docker compose -f docker-compose.yml up -d
+  - sed -i "s/GATEWAY_KEY=.*/GATEWAY_KEY=${gateway_key}/" /opt/app/jug.env
+  - sed -i "s/GATEWAY_SERVICE_URL=.*/GATEWAY_SERVICE_URL=${gateway_endpoint}/" /opt/app/jug.env
+  - sed -i 's/\\n/\n/g' /opt/app/docker/ai-hub.crt
+  - sed -i 's/\\n/\n/g' /opt/app/docker/ai-hub.key
+  - sudo systemctl restart --no-block jug-upgrade-agent && sleep 30
+  - sudo systemctl restart --no-block jug-infra && sleep 30
+  - sudo systemctl restart --no-block jug-app
