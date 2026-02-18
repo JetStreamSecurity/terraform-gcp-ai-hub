@@ -104,8 +104,8 @@ variable "subnet_id" {
   type        = string
 }
 
-variable "jetstream_gateway_key" {
-  description = "JetStream Gateway Key for AI Hub configuration"
+variable "jetstream_ai_hub_id" {
+  description = "JetStream AI-Hub id"
   type        = string
 }
 
@@ -125,7 +125,7 @@ variable "cert_private" {
 variable "instance_type" {
   description = "Instance type to use for the instance"
   type        = string
-  default     = "n1-standard-2"
+  default     = "n2-standard-4"
 }
 
 variable "ingress_ports" {

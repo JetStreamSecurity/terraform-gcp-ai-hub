@@ -17,7 +17,7 @@ write_files:
     content: ${cert_private}
 
 runcmd:
-  - sed -i "s/GATEWAY_KEY=.*/GATEWAY_KEY=${gateway_key}/" /opt/app/jug.env
+  - sed -i "s/GATEWAY_KEY=.*/GATEWAY_KEY=${ai_hub_id}/" /opt/app/jug.env
   - sed -i "s/GATEWAY_SERVICE_URL=.*/GATEWAY_SERVICE_URL=${gateway_endpoint}/" /opt/app/jug.env
   - sed -i 's/\\n/\n/g' /opt/app/docker/ai-hub.crt
   - sed -i 's/\\n/\n/g' /opt/app/docker/ai-hub.key
