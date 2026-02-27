@@ -1,0 +1,9 @@
+# Default CODEOWNERS file
+
+# This file defines who is automatically requested for review
+
+# on pull requests that modify files in this repository
+
+# Apply to everything in the repo
+
+* @jb-smoker @jetstream-ant
