@@ -54,7 +54,7 @@ variable "instance_tags" {
 variable "boot_disk_size_gb" {
   description = "Size of the boot disk in GB"
   type        = number
-  default     = 100
+  default     = 1000 # minimum size is 100 for AI Hub
 }
 
 variable "boot_disk_type" {
@@ -125,13 +125,13 @@ variable "cert_private" {
 variable "instance_type" {
   description = "Instance type to use for the instance"
   type        = string
-  default     = "n2-standard-4"
+  default     = "n2-standard-8"
 }
 
 variable "ingress_ports" {
   description = "Ingress ports for the security group"
   type        = list(string)
-  default     = ["4000", "443"]
+  default     = ["443"]
 }
 
 variable "gateway_endpoint" {
