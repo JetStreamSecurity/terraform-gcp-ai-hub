@@ -3,24 +3,31 @@
 package_update: true
 package_upgrade: true
 
+  %{ if cert_public != "" }
 write_files:
   - path: /opt/app/docker/ai-hub.crt
     owner: ubuntu:ubuntu
     permissions: '0644'
     encoding: b64
     content: ${cert_public}
-
+      %{ endif }
+      %{ if cert_private != "" }
   - path: /opt/app/docker/ai-hub.key
     owner: ubuntu:ubuntu
     permissions: '0600'
     encoding: b64
     content: ${cert_private}
+      %{ endif }
 
 runcmd:
   - sed -i "s/GATEWAY_KEY=.*/GATEWAY_KEY=${ai_hub_id}/" /opt/app/jug.env
   - sed -i "s/GATEWAY_SERVICE_URL=.*/GATEWAY_SERVICE_URL=${gateway_endpoint}/" /opt/app/jug.env
+    %{ if cert_public != "" }
   - sed -i 's/\\n/\n/g' /opt/app/docker/ai-hub.crt
+    %{ endif }
+    %{ if cert_private != "" }
   - sed -i 's/\\n/\n/g' /opt/app/docker/ai-hub.key
+    %{ endif }
   - sudo systemctl restart --no-block jug-upgrade-agent && sleep 30
   - sudo systemctl restart --no-block jug-infra && sleep 30
   - sudo systemctl restart --no-block jug-app
