@@ -107,6 +107,7 @@ variable "subnet_id" {
 variable "jetstream_ai_hub_id" {
   description = "JetStream AI-Hub id"
   type        = string
+  sensitive   = true
 }
 
 variable "cert_public" {
@@ -119,6 +120,7 @@ variable "cert_private" {
   description = "Private key for AI Hub certificate"
   type        = string
   default     = null
+  sensitive   = true
 }
 
 # Optional Variables
