@@ -43,7 +43,7 @@ resource "google_compute_firewall" "egress" {
     ports    = [tostring(each.value.from_port)]
   }
 
-  destination_ranges = each.value.cidr_ipv4 != null ? [each.value.cidr_ipv4] : []
+  destination_ranges = each.value.cidr_ipv4 != null ? [each.value.cidr_ipv4] : [each.value.cidr_ipv6]
   target_tags        = ["external-access"]
 
   description = each.value.description
