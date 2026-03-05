@@ -21,7 +21,7 @@ resource "google_compute_firewall" "allow_external_access" {
 
   allow {
     protocol = "tcp"
-    ports    = ["22", "4000", "443"]
+    ports    = ["22", "443"]
   }
 
   source_ranges = var.ingress_cidrs
@@ -72,8 +72,8 @@ resource "google_compute_instance" "instance" {
     user-data = templatefile("${path.module}/cloud-init.yaml", {
       ai_hub_id        = var.jetstream_ai_hub_id
       gateway_endpoint = var.gateway_endpoint
-      cert_public      = var.cert_public
-      cert_private     = var.cert_private
+      cert_public      = var.cert_public != null ? var.cert_public : ""
+      cert_private     = var.cert_private != null ? var.cert_private : ""
     })
   }
 
