@@ -110,6 +110,7 @@ variable "jetstream_ai_hub_id" {
   sensitive   = true
 }
 
+# Optional Variables
 variable "cert_public" {
   description = "Public certificate for AI Hub"
   type        = string
@@ -123,7 +124,6 @@ variable "cert_private" {
   sensitive   = true
 }
 
-# Optional Variables
 variable "instance_type" {
   description = "Instance type to use for the instance"
   type        = string
@@ -140,6 +140,78 @@ variable "gateway_endpoint" {
   description = "JetStream Gateway Endpoint"
   type        = string
   default     = "gateway.jetstream.security"
+}
+
+variable "egress_rules_map" {
+  description = "Map of egress rules for the security group"
+  type = map(object({
+    description                  = string
+    ip_protocol                  = string
+    from_port                    = optional(number)
+    to_port                      = optional(number)
+    cidr_ipv4                    = optional(string)
+    cidr_ipv6                    = optional(string)
+    referenced_security_group_id = optional(string)
+  }))
+
+  default = {
+    https_out = {
+      description = "HTTPS outbound for LLM provider APIs and package updates"
+      ip_protocol = "tcp"
+      from_port   = 443
+      to_port     = 443
+      cidr_ipv4   = "0.0.0.0/0"
+    }
+    https_out_v6 = {
+      description = "HTTPS outbound for LLM provider APIs and package updates (IPv6)"
+      ip_protocol = "tcp"
+      from_port   = 443
+      to_port     = 443
+      cidr_ipv6   = "::/0"
+    }
+    http_out = {
+      description = "HTTP outbound for apt mirrors"
+      ip_protocol = "tcp"
+      from_port   = 80
+      to_port     = 80
+      cidr_ipv4   = "0.0.0.0/0"
+    }
+    http_out_v6 = {
+      description = "HTTP outbound for apt mirrors (IPv6)"
+      ip_protocol = "tcp"
+      from_port   = 80
+      to_port     = 80
+      cidr_ipv6   = "::/0"
+    }
+    dns_out = {
+      description = "DNS resolution"
+      ip_protocol = "udp"
+      from_port   = 53
+      to_port     = 53
+      cidr_ipv4   = "0.0.0.0/0"
+    }
+    dns_out_v6 = {
+      description = "DNS resolution (IPv6)"
+      ip_protocol = "udp"
+      from_port   = 53
+      to_port     = 53
+      cidr_ipv6   = "::/0"
+    }
+    ntp_out = {
+      description = "NTP time sync"
+      ip_protocol = "udp"
+      from_port   = 123
+      to_port     = 123
+      cidr_ipv4   = "0.0.0.0/0"
+    }
+    ntp_out_v6 = {
+      description = "NTP time sync (IPv6)"
+      ip_protocol = "udp"
+      from_port   = 123
+      to_port     = 123
+      cidr_ipv6   = "::/0"
+    }
+  }
 }
 
 # Tags

@@ -13,7 +13,7 @@ data "google_compute_image" "custom_image" {
   most_recent = true
 }
 
-# Firewall rule to allow SSH, port 4000, and HTTPS from your IP only
+# Firewall rule to allow SSH, and HTTPS from your IP only
 resource "google_compute_firewall" "allow_external_access" {
   name    = "${var.name}-firewall"
   network = data.google_compute_network.vpc.name
@@ -21,13 +21,50 @@ resource "google_compute_firewall" "allow_external_access" {
 
   allow {
     protocol = "tcp"
-    ports    = ["22", "443"]
+    ports    = var.ingress_ports
   }
 
   source_ranges = var.ingress_cidrs
   target_tags   = ["external-access"]
 
-  description = "Allow SSH, port 4000, and HTTPS from authorized IP only"
+  description = "Allow ingress from authorized cidrs only"
+}
+
+resource "google_compute_firewall" "egress" {
+  for_each = var.egress_rules_map
+
+  name      = "${var.name}-egress-${replace(each.key, "_", "-")}"
+  network   = data.google_compute_network.vpc.name
+  project   = var.project_id
+  direction = "EGRESS"
+
+  allow {
+    protocol = each.value.ip_protocol
+    ports    = [tostring(each.value.from_port)]
+  }
+
+  destination_ranges = each.value.cidr_ipv4 != null ? [each.value.cidr_ipv4] : [each.value.cidr_ipv6]
+  target_tags        = ["external-access"]
+
+  description = each.value.description
+}
+
+# Deny all other egress
+resource "google_compute_firewall" "egress_deny_all" {
+  name      = "${var.name}-egress-deny-all"
+  network   = data.google_compute_network.vpc.name
+  project   = var.project_id
+  direction = "EGRESS"
+  priority  = 65534
+
+  deny {
+    protocol = "all"
+  }
+
+  destination_ranges = ["0.0.0.0/0"]
+  target_tags        = ["external-access"]
+
+  description = "Deny all other outbound traffic"
 }
 
 # Compute Instance

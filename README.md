@@ -148,6 +148,7 @@ module "jetstream_ai_hub" {
 | enable_os_login | Enable OS Login for the instance (FALSE when using SSH keys directly) | `string` | `"FALSE"` | no |
 | cert_public | Public certificate for AI-Hub (base64 encoded) | `string` | `null` | no |
 | cert_private | Private key for AI-Hub certificate (base64 encoded) | `string` | `null` | no |
+| egress_rules_map | Map of egress rules for the AI Hub security group. Each rule requires `description`, `ip_protocol`, `from_port`, and `to_port`, `cidr_ipv4` | `map(object({ description = string, ip_protocol = string, from_port = optional(number), to_port = optional(number), cidr_ipv4 = optional(string) }))` | See variable defaults | no |
 | instance_type | Machine type to use for the instance | `string` | `"n1-standard-2"` | no |
 | ingress_ports | Ingress ports for the firewall (note: currently hardcoded to 22, 4000, 443) | `list(string)` | `["4000", "443"]` | no |
 | tags | Map of labels to assign to all resources | `map(string)` | `{}` | no |
